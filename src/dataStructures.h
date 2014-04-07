@@ -18,8 +18,6 @@ typedef enum{
   Left
 } orientation;
 
-
-
 struct edgeNode {
   struct edgeNode * next;
   int id;
