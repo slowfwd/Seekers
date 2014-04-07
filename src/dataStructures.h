@@ -23,7 +23,7 @@ typedef enum{
 struct edgeNode {
   struct edgeNode * next;
   int id;
-  float distance;
+  int distance;
   orientation turn;
 };
 
