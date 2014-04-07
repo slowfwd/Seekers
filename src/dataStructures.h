@@ -44,7 +44,7 @@ void deleteEdge(vertexNode *, vertexNode *);
 void deleteVertexNode(vertexNode *);
 bool addEdge(vertexNode *,vertexNode *, float, orientation, orientation);
 vertexNode * search(int);
-bool searchEdge(vertexNode*, int );
+edgeNode * searchEdge(vertexNode*, int );
 void init();
 void print();
 void edgeInit(vertexNode *, edgeNode *);
