@@ -8,4 +8,4 @@ struct param
 };
 
 typedef struct param param;
-param * getParam(pathNode * curr);
+param * getParam(pathNode*);
