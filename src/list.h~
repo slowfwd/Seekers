@@ -4,4 +4,3 @@ struct pathNode{
   };
 
 typedef struct pathNode pathNode;
-pathNode * insert(pathNode * ,int );

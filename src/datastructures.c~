@@ -129,7 +129,7 @@ edgeNode * current_searchedge;
 edgeNode * searchEdge(vertexNode* vnode, int id){
 	 current_searchedge = vnode->head;
 	 printf("%p\n",current_searchedge);
-	 printf("%d\n%d",current_searchedge->id, id);
+	 printf("%d\n",current_searchedge->id);
 	while(current_searchedge){
 		if(current_searchedge->id == id)
 			return current_searchedge;

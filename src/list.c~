@@ -19,5 +19,5 @@ pathNode * insert(pathNode * head,int d){
   
   newNode->next = NULL;
   newNode->id= d;
-  return head;
+  return 
 }
