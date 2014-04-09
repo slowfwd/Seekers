@@ -3,5 +3,7 @@ struct pathNode{
   struct pathNode* next;
   };
 
+int endofList;
 typedef struct pathNode pathNode;
 pathNode * insert(pathNode * ,int );
+

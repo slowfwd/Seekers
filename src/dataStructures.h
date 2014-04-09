@@ -3,10 +3,6 @@
 #include <inttypes.h>
 #include <stdlib.h>
 
-int xx ;
-
-#define ASSIGN_ID() ((xx) = (xx) + 1)
-
 typedef enum{
     false,
     true} bool;
@@ -36,15 +32,23 @@ typedef struct vertexNode vertexNode;
 
 
 bool createVertexNode();
-edgeNode * createEdgeNode(int);
+void createEdgeNode(int);
 void deleteEdgeAtoB(vertexNode *, vertexNode *);
 void deleteEdge(vertexNode *, vertexNode *);
 void deleteVertexNode(vertexNode *);
 bool addEdge(vertexNode *,vertexNode *, float, orientation, orientation);
-vertexNode * search(int);
-edgeNode * searchEdge(vertexNode*, int );
+void search(int);
+vertexNode* searchNode(int );
+void searchEdge(vertexNode*, int );
 void init();
 void print();
 void edgeInit(vertexNode *, edgeNode *);
+
+
+vertexNode *head;
+vertexNode *tail;
+vertexNode *foundNode;
+edgeNode *foundEdge;
+
 
 

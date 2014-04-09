@@ -1,41 +1,18 @@
 #include "interface.h"
-extern vertexNode *head;
-extern vertexNode *tail;
-vertexNode* currGraph;
 
-extern edgeNode* current_searchedge; 
-param* res;
-param * getParam(pathNode * curr)
-{
-	
-	int id = 0;
-	if(curr->next != NULL)
+
+void getParam(pathNode * curr)
+{       
+	if(curr->next->next==NULL)
 	{
-		 id = curr ->next-> id;
-		 //printf("%d ff\n",id);
+        	endofList = 1;
+		return;
 	}
-	else return NULL;
+	search(curr->id);
+	searchEdge(foundNode,curr->next->id);
+	printf("%d ID found in Vertex Node %d.\n",foundEdge -> id, curr ->id);
+	res_params->turn = foundEdge->turn;
+	res_params->timer = foundEdge->distance;
 	
-	if(id == 2)
-	{
-		currGraph = head;
-	}
-	
-	searchEdge(currGraph, id);
-	
-	//printf("%p\n",current);
-	if (current_searchedge != NULL)
-	{
-		res = (param*)current_searchedge;
-		printf("%d",current_searchedge->turn);
-		res->turn = current_searchedge->turn;
-		res->timer = current_searchedge->distance;
-	}
-	else
-	{
-		res->turn = 0;
-		res->timer = 0;
-	}
-	return res;
  }
 	
