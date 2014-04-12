@@ -1,4 +1,3 @@
-
 #include <cv.h>
 #include <highgui.h>
 
@@ -59,11 +58,7 @@ void createTrackbars(){
 	sprintf( TrackbarName, "S_MAX", S_MAX);
 	sprintf( TrackbarName, "V_MIN", V_MIN);
 	sprintf( TrackbarName, "V_MAX", V_MAX);
-	//create trackbars and insert them into window
-	//3 parameters are: the address of the variable that is changing when the trackbar is moved(eg.H_LOW),
-	//the max value the trackbar can move (eg. H_HIGH), 
-	//and the function that is called whenever the trackbar is moved(eg. on_trackbar)
-	//                                  ---->    ---->     ---->      
+
     createTrackbar( "H_MIN", trackbarWindowName, &H_MIN, H_MAX, on_trackbar );
     createTrackbar( "H_MAX", trackbarWindowName, &H_MAX, H_MAX, on_trackbar );
     createTrackbar( "S_MIN", trackbarWindowName, &S_MIN, S_MAX, on_trackbar );
@@ -74,13 +69,10 @@ void createTrackbars(){
 
 }
 void drawObject(int x, int y,Mat &frame){
-
-	//use some of the openCV drawing functions to draw crosshairs
-	//on your tracked image!
-
-    //UPDATE:JUNE 18TH, 2013
-    //added 'if' and 'else' statements to prevent
-    //memory errors from writing off the screen (ie. (-25,-25) is not within the window!)
+// Indicates 
+//1. The position of the object on the frame
+//2. Indicates the area of the object
+//3. Indicates whether the object is on the left or right edge
 
 	circle(frame,Point(x,y),20,Scalar(0,255,0),2);
     if(y-25>0)
@@ -102,11 +94,9 @@ void drawObject(int x, int y,Mat &frame){
 }
 void morphOps(Mat &thresh){
 
-	//create structuring element that will be used to "dilate" and "erode" image.
-	//the element chosen here is a 3px by 3px rectangle
 
 	Mat erodeElement = getStructuringElement( MORPH_RECT,Size(3,3));
-    //dilate with larger element so make sure object is nicely visible
+
 	Mat dilateElement = getStructuringElement( MORPH_RECT,Size(8,8));
 
 	erode(thresh,thresh,erodeElement);
@@ -169,35 +159,17 @@ void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed){
 	}
 }
 
-/*
-
-int main(int argc, const char** argv){
-    RaspiCamCvCapture * capture = raspiCamCvCreateCameraCapture(0); // Index doesn't really matter
-	cvNamedWindow("RaspiCamTest", 1);
-	do {
-		IplImage* image = raspiCamCvQueryFrame(capture);
-		cvShowImage("RaspiCamTest", image);
-	} while (cvWaitKey(10) < 0);
-
-	cvDestroyWindow("RaspiCamTest");
-	raspiCamCvReleaseCapture(&capture);
-	return 0;
-}
-
-*/
 
 int main(int argc, char* argv[])
 {
-	//some boolean variables for different functionality within this
-	//program
-    bool trackObjects = true;
-    bool useMorphOps = true;
-   RaspiCamCvCapture * capture = raspiCamCvCreateCameraCapture(0); // Index doesn't really matter
+	bool trackObjects = true;
+    	bool useMorphOps = true;
+   	RaspiCamCvCapture * capture = raspiCamCvCreateCameraCapture(0); // Index doesn't really matter
 
 	IplImage* image;
 	//IplFormat image from PiCam
 
-	//Matrix to store each frame of the webcam feed
+	
 	Mat cameraFeed;
 	//matrix storage for HSV image
 	Mat HSV;
@@ -209,9 +181,11 @@ int main(int argc, char* argv[])
 	createTrackbars();
 
 	while(1){
-		//store image to matrix
+	
+		//Get frame from PiCam
 		IplImage* image = raspiCamCvQueryFrame(capture);
 		
+		//Convert into Mat - C++ format
 		cameraFeed = cvarrToMat(image,false);
 
 		//convert frame from BGR to HSV colorspace
@@ -219,13 +193,14 @@ int main(int argc, char* argv[])
 		//filter HSV image between values and store filtered image to
 		//threshold matrix
 		inRange(HSV,Scalar(H_MIN,S_MIN,V_MIN),Scalar(H_MAX,S_MAX,V_MAX),threshold);
-		//perform morphological operations on thresholded image to eliminate noise
-		//and emphasize the filtered object(s)
+
 		if(useMorphOps)
 		morphOps(threshold);
+
 		//pass in thresholded frame to our object tracking function
 		//this function will return the x and y coordinates of the
 		//filtered object
+
 		if(trackObjects)
 			trackFilteredObject(x,y,threshold,cameraFeed);
 
@@ -234,9 +209,6 @@ int main(int argc, char* argv[])
 		imshow(windowName,cameraFeed);
 		//imshow(windowName1,HSV);
 		
-
-		//delay 30ms so that screen can refresh.
-		//image will not appear without this waitKey() command
 		waitKey(30);
 	}
 
