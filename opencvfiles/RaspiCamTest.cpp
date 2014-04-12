@@ -10,6 +10,9 @@
 #include <stdio.h>
 using namespace cv;
 
+#define RIGHT_THRESHOLD (500)
+#define LEFT_THRESHOLD	(100)
+
 int H_MIN = 0;
 int H_MAX = 256;
 int S_MIN = 0;
@@ -130,10 +133,6 @@ void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed){
 				Moments moment = moments((cv::Mat)contours[index]);
 				double area = moment.m00;
 
-				//if the area is less than 20 px by 20px then it is probably just noise
-				//if the area is the same as the 3/2 of the image size, probably just a bad filter
-				//we only want the object with the largest area so we safe a reference area each
-				//iteration and compare it to the area in the next iteration.
                 if(area>MIN_OBJECT_AREA && area<MAX_OBJECT_AREA && area>refArea){
 					x = moment.m10/area;
 					y = moment.m01/area;
@@ -148,9 +147,9 @@ void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed){
 				putText(cameraFeed,"Tracking Object",Point(0,50),2,1,Scalar(0,255,0),2);
 
 				putText(cameraFeed,intToString((int)refArea),Point(0,200),2,1,Scalar(0,0,200),2);
-				if(x>500)
+				if(x>RIGHT_THRESHOLD)
 					putText(cameraFeed,"Obj at right edge", Point(0,300),2,1,Scalar(0,0,200),2);
-				if(x<100)
+				if(x<LEFT_THRESHOLD)
 					putText(cameraFeed,"Obj at left edge", Point(300,450),2,1,Scalar(0,0,200),2);
 				//draw object location on screen
 				drawObject(x,y,cameraFeed);}
