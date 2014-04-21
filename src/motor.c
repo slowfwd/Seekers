@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <bcm2835.h>
 #include <time.h>
@@ -6,7 +5,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <sys/types.h>
-#include "interface.h"
+#include "motor.h"
 
 #define FORWARD 1
 #define RIGHT 2
@@ -15,6 +14,7 @@
 #define MOTORB RPI_GPIO_P1_11
 
 
+extern orientation lastTurn;
 
 struct motor_params{
   int pin;
@@ -23,53 +23,37 @@ struct motor_params{
 
 struct motor_params motorleft,motorright;
 
-pathNode *headList;
-extern param* res_params;
-extern int endofList;
-
-void printPath ()
-{
-pathNode * iter;
-iter = headList;
-while (iter)
-{
-	//printf("%p\t",iter);
-	printf("%d \n", iter -> id) ;
-	iter = iter -> next;
-}
-//printf("%p\t",iter);
-}
+//pathNode *headList;
+//extern param* res_params;
+//extern int endofList;
 
 void run ()
 {   init();
-    endofList = 0;
+	lastTurn = Straight;
+   // endofList = 0;
     // memory allocation for recieved parameters from graph to drive the bot
-    res_params = (param*) malloc(sizeof(param)); 
+    //res_params = (param*) malloc(sizeof(param)); 
     int i = 0;
-    while(i<6){
+    while(i<9){
     
         createVertexNode();
         
         i++;
     }
-    addEdge(searchNode(0),searchNode(1), 3, Straight, Straight );
-    addEdge(searchNode(0),searchNode(2), 3, Right, Right );
-    addEdge(searchNode(1),searchNode(2), 4, Straight, Straight );
-    addEdge(searchNode(2),searchNode(4), 3, Right, Right );
-    addEdge(searchNode(2),searchNode(5), 3, Right, Right );
-    addEdge(searchNode(2),searchNode(3), 6, Right, Right );
-    addEdge(searchNode(1),searchNode(3), 3, Right, Right );
-    addEdge(searchNode(3),searchNode(6), 3, Right, Right );
+    addEdge(searchNode(0),searchNode(1), 3, Left, Right );
+    addEdge(searchNode(1),searchNode(2), 3, Left, Right );
+    addEdge(searchNode(2),searchNode(5), 3, Back, Straight );
+    addEdge(searchNode(5),searchNode(4), 3, Right, Left );
+    addEdge(searchNode(4),searchNode(3), 3, Right, Left );
+    addEdge(searchNode(1),searchNode(4), 3, Back, Straight );
+    addEdge(searchNode(0),searchNode(3), 3, Back, Straight );
+    addEdge(searchNode(3),searchNode(6), 3, Back, Straight );
+	addEdge(searchNode(6),searchNode(7), 3, Left, Right );
+	addEdge(searchNode(7),searchNode(8), 3, Left, Right );
+	addEdge(searchNode(4),searchNode(7), 3, Back, Straight );
+	addEdge(searchNode(5),searchNode(8), 3, Back, Straight );    
     
-    
-    headList = insert(headList,0);
-    insert(headList,1);
-    insert(headList,2);
-    insert(headList,3);
-    insert(headList,6);
-    insert(headList,3);
-    //printPath();
-    //print();
+   //print();
   }
 
 void init_motors(){
@@ -96,7 +80,7 @@ void *drivemotors(void *arg){
   } 
 }
 
-void driveStraight(){
+void driveStraight(int distance){
   printf("Going Straight\n");
   pthread_t lth ,rth;
   motorright.duty = 3.75;
@@ -105,17 +89,17 @@ void driveStraight(){
   //starting motor thread   
   pthread_create(&rth,NULL,drivemotors,(void*)&motorright);
   pthread_create(&lth,NULL,drivemotors,(void*)&motorleft);
-  
-  sleep(res_params ->timer);
+	printf("Threads created in drive straight.: %d \n",distance);  
+  sleep(distance);
   
   pthread_cancel(rth);
   pthread_cancel(lth);
   pthread_join(rth,NULL);
   pthread_join(lth,NULL);
-  
+	printf("Threads cancelled in drive straight. \n");  
 }
 
-void turnRight(){
+void turnRight(int distance){
   printf("Turning Right\n");
   pthread_t lth ,rth;
   motorright.duty = 7.25;
@@ -124,34 +108,35 @@ void turnRight(){
   pthread_create(&rth,NULL,drivemotors,(void*)&motorright);
   pthread_create(&lth,NULL,drivemotors,(void*)&motorleft);
   
-  usleep(1350000);
+  usleep(1370000);
+//	sleep(1);
   
   pthread_cancel(rth);
   pthread_cancel(lth);
   pthread_join(rth,NULL);
   pthread_join(lth,NULL);
   
-  driveStraight();
+ // driveStraight(distance);
   
 }
 
-void turnLeft(){
+void turnLeft(int distance){
   printf("Turning Left\n");
   pthread_t lth ,rth;
-  motorright.duty = 3.75;
-  motorleft.duty = 7.25;
+  motorright.duty =7.25;// 3.75;
+  motorleft.duty = 3.75;//7.25;
   
   pthread_create(&rth,NULL,drivemotors,(void*)&motorright);
   pthread_create(&lth,NULL,drivemotors,(void*)&motorleft);
   
-  usleep(1350000);
-  
+  usleep(1370000);
+ // sleep(1);
   pthread_cancel(rth);
   pthread_cancel(lth);
   pthread_join(rth,NULL);
   pthread_join(lth,NULL);
   
-  driveStraight();
+ // driveStraight(distance);
 }
 
 void rotate360(){
@@ -170,67 +155,59 @@ void rotate360(){
   pthread_join(lth,NULL);
    
 }
-int main(int argc,char **argv){ 
-    init_motors();
-    param*  moveParams;
-  
-  //pthread_t lth ,rth;
-  run();
 
- 
-  orientation direction;
-  
- 
-  
-  while(headList && (endofList == 0)){
-	//printf("Reached \n");
-       getParam(headList);
-       //res_params -> turn = 0;
-       direction =  res_params->turn;
-       rotate360();
-      switch(direction){
-      	case Straight:
-      	  driveStraight();
-      	  /*motorright.duty = 3.75;
-      	  motorleft.duty = 11.25;*/
-      	break;
-      	case Right:
-      	  turnRight();
-      	  /*motorright.duty = 0;
-      	  motorleft.duty = 11.25;*/
-      	break;
-      	case Left:
-      	  turnLeft();
-      	  /*motorright.duty = 3.75;
-      	  motorleft.duty = 0;*/
-      	break;
-      	default:
-      	  motorright.duty = 7.25;
-      	  motorleft.duty = 7.25;
-      	  break; 
+void orient(int x)
+{
+	printf("\n Orienting itself.: %d \n",lastTurn); 
+      sleep(1);
+      switch(lastTurn)
+      {
+              case Right:
+                      turnLeft(x);
+                      sleep(1);
+                      break;
+              case Back:
+                      turnRight(x);
+			sleep(1);
+                      turnRight(x);
+                      sleep(1);
+                      break;
+              case Left:
+                      turnRight(x);
+                      sleep(1);
+                      break;
+              default:
+                      break;
       }
-      
-      /*
-      //starting motor thread   
-      pthread_create(&rth,NULL,drivemotors,(void*)&motorright);
-      pthread_create(&lth,NULL,drivemotors,(void*)&motorleft);
-      //sleep(3);
-      sleep(res_params ->timer);
-      /*if(direction == FORWARD)
-    	sleep(3);
-      else{ 
-	sleep(1);
-	} */	 
-      /*pthread_cancel(rth);
-      pthread_cancel(lth);
-      pthread_join(rth,NULL);
-      pthread_join(lth,NULL);*/
-      headList = headList->next;
-      
-    
-  }
-  
-  bcm2835_close();
-
-  return 0;
 }
+
+
+void moveCar(orientation direction, int distance){
+  orient(distance); 
+  switch(direction){
+  	case Straight:
+  	  driveStraight(distance);
+  	break;
+  	case Right:
+  	  turnRight(distance);
+	driveStraight(distance);
+  	break;
+  	case Left:
+  	  turnLeft(distance);
+	driveStraight(distance);
+  	break;
+	case Back:
+		turnRight(distance);
+		sleep(1);
+		turnRight(distance);
+		driveStraight(distance);
+		break;
+  	default:
+  	  motorright.duty = 7.25;
+  	  motorleft.duty = 7.25;
+  	  break; 
+  }
+  //bcm2835_close();
+  return ;
+}
+

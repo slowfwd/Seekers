@@ -2,11 +2,12 @@
 #include <string.h>
 #include <inttypes.h>
 #include <stdlib.h>
-
+#include <stdbool.h>
+/*
 typedef enum{
     false,
     true} bool;
-
+*/
 typedef enum{
   Straight,
   Right,
@@ -45,10 +46,10 @@ void print();
 void edgeInit(vertexNode *, edgeNode *);
 
 
-vertexNode *head;
-vertexNode *tail;
-vertexNode *foundNode;
-edgeNode *foundEdge;
+//extern vertexNode *head;
+//extern vertexNode *tail;
+//extern vertexNode *foundNode;
+//extern edgeNode *foundEdge;
 
 
 

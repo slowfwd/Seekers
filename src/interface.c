@@ -1,5 +1,7 @@
 #include "interface.h"
-
+extern vertexNode * foundNode;
+extern edgeNode * foundEdge;
+param * res_params;
 
 void getParam(pathNode * curr)
 {       

@@ -1,5 +1,5 @@
 #include "interface.h"
-
+int endofList;
 pathNode * insert(pathNode * head,int d){
   pathNode * newNode = (pathNode *) malloc(sizeof(pathNode));
   pathNode * currentNode= head;
