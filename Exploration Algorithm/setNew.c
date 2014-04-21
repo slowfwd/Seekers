@@ -1,6 +1,5 @@
 #include "set.h"
 
-<<<<<<< HEAD
 void addToSet(set ** head, int ID){
 
 	//check if the node exists, don't add
@@ -10,28 +9,6 @@ void addToSet(set ** head, int ID){
 	}
 	if(!setContains(*head, ID)){// if the set doesn't contain the given ID
 		addToLinkedList(head,(*head)->listHead, ID);
-=======
-// void initSet(set * head){
-
-// 	head->listHead = NULL;
-// }
-
-void addToSet(set * head, int ID){
-
-	//check if the node exists, don't add
-	// graph_node * current = head;
-	// printf("Inside addToSet \n");
-	// printf("Pointer to Spine: %d\n",head);
-
-	if(head == NULL){//first element of the set
-		// printf("Inside addToset first element loop\n");
-		head = malloc(sizeof(set));
-		head->listHead = NULL;
-	}
-	if(!setContains(head, ID)){// if the set doesn't contain the given ID
-		addToLinkedList(head,head->listHead, ID);
-
->>>>>>> a440a65589add3a059e8eff39d3c8c556b6bc90c
 	}
 }
 
@@ -40,7 +17,6 @@ void addToSet(set * head, int ID){
  * @param- pointer to first element, node ID
  * returns nothing
  */
-<<<<<<< HEAD
 void addToLinkedList(set ** setHead, graph_node * head, int ID){
 
 	if(head == NULL){//first node of the list
@@ -48,55 +24,21 @@ void addToLinkedList(set ** setHead, graph_node * head, int ID){
 		head->ID = ID;
 		head->next = NULL;
 		(*setHead)->listHead = head;
-=======
-void addToLinkedList(set* setHead, graph_node * head, int ID){
-
-	// printf("the head before malloc %d\n",head);
-
-	// if(current == NULL){//first node of the list
-	// 	current = malloc(sizeof(graph_node));
-	// 	current->ID = ID;
-	// 	current->next = NULL;
-	// 	printf("Inside addToLinkedList\n");
-	// 	return;
-	// }
-	if(head == NULL){//first node of the list
-		head = malloc(sizeof(graph_node));
-		// printf("the head after malloc %d\n",head);
-		head->ID = ID;
-		head->next = NULL;
-		// printf(" Inside addToLinkedList\n");
-		setHead->listHead = head;
->>>>>>> a440a65589add3a059e8eff39d3c8c556b6bc90c
 		return;
 	}
 	graph_node * current = head;
 	while(current->next != NULL){//traverse till the end of the list
 		current = current->next;
-<<<<<<< HEAD
 	}
 	current->next = malloc(sizeof(graph_node));
 	current->next->ID = ID;
 	current->next->next = NULL;
 	(*setHead)->listHead = head;
-=======
-		// printf("In while\n");
-	}
-	// printf("new node added\n");
-	current->next = malloc(sizeof(graph_node));
-	current->next->ID = ID;
-	current->next->next = NULL;
-	setHead->listHead = head;
->>>>>>> a440a65589add3a059e8eff39d3c8c556b6bc90c
 }
 
 /**
  * prints out the list of nodes in the list
  */
-<<<<<<< HEAD
-=======
-// 
->>>>>>> a440a65589add3a059e8eff39d3c8c556b6bc90c
 
 void listLinkedList(graph_node * head){
 
@@ -105,22 +47,12 @@ void listLinkedList(graph_node * head){
 	if(current == NULL){
 		printf("List Empty!");
 		return;
-<<<<<<< HEAD
-=======
-		// return -1;
->>>>>>> a440a65589add3a059e8eff39d3c8c556b6bc90c
 	}
 	int i=0;
 	while(current != NULL){
 		printf("Node %d\n", current->ID);
 		current = current->next;
-<<<<<<< HEAD
 	}
-=======
-		// printf("Is it here?\n");
-	}
-	// return 1;
->>>>>>> a440a65589add3a059e8eff39d3c8c556b6bc90c
 }
 
 
@@ -129,16 +61,9 @@ void listSet(set * head){
 	if(head == NULL)
 		return;
 	listLinkedList(head->listHead);
-<<<<<<< HEAD
 }
 
 int removeNodeFromList(set ** setHead, graph_node * head, int ID){
-=======
-	// printf("Is it here?\n");
-}
-
-int removeNodeFromList(set * setHead, graph_node * head, int ID){
->>>>>>> a440a65589add3a059e8eff39d3c8c556b6bc90c
 
 	graph_node * current = head;
 	graph_node * temp;
@@ -147,11 +72,7 @@ int removeNodeFromList(set * setHead, graph_node * head, int ID){
 		if(head->ID == ID){
 			free(head);
 			head=NULL;
-<<<<<<< HEAD
 			(*setHead)->listHead = NULL;
-=======
-			setHead->listHead = NULL;
->>>>>>> a440a65589add3a059e8eff39d3c8c556b6bc90c
 			return 1;
 		}
 	}
@@ -161,11 +82,7 @@ int removeNodeFromList(set * setHead, graph_node * head, int ID){
 			temp= current->next;
 			free(head);
 			// head = temp;
-<<<<<<< HEAD
 			(*setHead)->listHead = temp;
-=======
-			setHead->listHead = temp;
->>>>>>> a440a65589add3a059e8eff39d3c8c556b6bc90c
 			return 1;
 		}
 		while(current->next != NULL){//check rest of the nodes
@@ -181,15 +98,9 @@ int removeNodeFromList(set * setHead, graph_node * head, int ID){
 	return -1;
 }
 
-<<<<<<< HEAD
 int removeNodeFromSet(set ** head, int ID){
 	if(isSetEmpty(*head)){ return -1;}
 	return removeNodeFromList(head, (*head)->listHead, ID);	
-=======
-int removeNodeFromSet(set * head, int ID){
-
-	return removeNodeFromList(head, head->listHead, ID);	
->>>>>>> a440a65589add3a059e8eff39d3c8c556b6bc90c
 }
 
 /**
@@ -214,11 +125,7 @@ graph_node * searchNodeInLinkedList(graph_node * head, int ID){
  * returns nothing
  * clears the entire list
  */
-<<<<<<< HEAD
 void clearLinkedList(set ** setHead, graph_node * head){
-=======
-void clearLinkedList(set * setHead, graph_node * head){
->>>>>>> a440a65589add3a059e8eff39d3c8c556b6bc90c
 
 	// graph_node * current =head;
 	graph_node * temp;
@@ -226,31 +133,18 @@ void clearLinkedList(set * setHead, graph_node * head){
 		temp = head->next;
 		free(head);
 		head = temp;
-<<<<<<< HEAD
 		(*setHead)->listHead = temp;
-=======
-		setHead->listHead = temp;
->>>>>>> a440a65589add3a059e8eff39d3c8c556b6bc90c
 
 	}
 	if(head->next == NULL)//last element
 		free(head);
 		head=NULL;
-<<<<<<< HEAD
 		(*setHead)->listHead = NULL;
 }
 
 void clearSet(set ** head){
 
 	clearLinkedList(head, (*head)->listHead);
-=======
-		setHead->listHead = NULL;
-}
-
-void clearSet(set * head){
-
-	clearLinkedList(head, head->listHead);
->>>>>>> a440a65589add3a059e8eff39d3c8c556b6bc90c
 }
 
 /**
@@ -267,12 +161,9 @@ bool listContains(graph_node * head, int ID){
 
 bool setContains(set * head, int ID){
 
-<<<<<<< HEAD
 	//printf("Inside setContains: %p\n",head);
 	if(head==NULL)
 		return false;
-=======
->>>>>>> a440a65589add3a059e8eff39d3c8c556b6bc90c
 	return listContains(head->listHead,ID);
 }
 
@@ -317,8 +208,4 @@ int isLinkedListEmpty(graph_node * head){
 int isSetEmpty(set * head){
 
 	return isLinkedListEmpty(head->listHead);
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> a440a65589add3a059e8eff39d3c8c556b6bc90c

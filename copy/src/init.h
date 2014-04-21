@@ -1,0 +1,2 @@
+void startSearch();
+void startDetect();
