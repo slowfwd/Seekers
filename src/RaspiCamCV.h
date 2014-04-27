@@ -1,3 +1,6 @@
+/********** Header File for RaspiCam Wrapper ************/
+
+
 #ifndef __RaspiCamCV__
 #define __RaspiCamCV__
 

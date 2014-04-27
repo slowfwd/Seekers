@@ -12,8 +12,8 @@
 
 using namespace cv;
 
-#define RIGHT_THRESHOLD (500)
-#define LEFT_THRESHOLD	(100)
+#define RIGHT_THRESHOLD (500)	// Horizontal axis threshold for detecting object last went right
+#define LEFT_THRESHOLD	(100)	// Horizontal axis threshold for detecting object last went left
 
 int H_MIN = 0;
 int H_MAX = 256;
@@ -27,11 +27,11 @@ const int FRAME_WIDTH = 640;
 const int FRAME_HEIGHT = 480;
 
 //max number of objects to be detected in frame
-const int MAX_NUM_OBJECTS=50;
+const int MAX_NUM_OBJECTS=2;
+
 //minimum and maximum object area
 const int MIN_OBJECT_AREA = 20*20;
 const int MAX_OBJECT_AREA = FRAME_HEIGHT*FRAME_WIDTH/1.5;
-//names that will appear at the top of each window
 
 const string windowName = "Original Image";
 const string windowName1 = "HSV Image";
@@ -74,10 +74,10 @@ void createTrackbars(){
 
 }
 void drawObject(int x, int y,Mat &frame){
-// Indicates 
-//1. The position of the object on the frame
-//2. Indicates the area of the object
-//3. Indicates whether the object is on the left or right edge
+	// Indicates 
+	//1. The position of the object on the frame
+	//2. Indicates the area of the object
+	//3. Indicates whether the object is on the left or right edge
 
 	circle(frame,Point(x,y),20,Scalar(0,255,0),2);
     if(y-25>0)
@@ -97,6 +97,9 @@ void drawObject(int x, int y,Mat &frame){
 	
 
 }
+
+// Performs erosion and dialation on the Black and White threshold image
+
 void morphOps(Mat &thresh){
 
 
@@ -114,6 +117,12 @@ void morphOps(Mat &thresh){
 
 
 }
+
+// 1.Finds the contours of the object.
+// 2. Finds contour area 
+
+// Updates global area and flag object found
+
 void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed){
 
 	Mat temp;
