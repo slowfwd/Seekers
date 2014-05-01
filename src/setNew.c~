@@ -20,7 +20,7 @@ void addToSet(set ** head, int ID){
 void addToLinkedList(set ** setHead, graph_node * head, int ID){
 
 	if(head == NULL){//first node of the list
-		head = (graph_node*)malloc(sizeof(graph_node));
+		head = malloc(sizeof(graph_node));
 		head->ID = ID;
 		head->next = NULL;
 		(*setHead)->listHead = head;

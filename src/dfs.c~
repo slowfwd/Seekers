@@ -182,18 +182,12 @@ void startSearch()
     addToSet(&markedNodes,currentNodeID);  
     push(&spine, currentNodeID);
     nextNodeID = DecideNextNode(currentNodeID);
-    int cnt = 0;
 while(1)
 {
     //scanAndSearch();    //openCV code 
     
     if(objectFound == true)
     {
-	printf("Obj found: %d",cnt);
-	cnt ++;
-	rotate360();
-	objectFound = false;	
-
        /* while(isObjectClose() == 0)
            moveForward(); // Provided by the motor library
     

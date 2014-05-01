@@ -1,5 +1,5 @@
-datastructures.o: datastructures.c dataStructures.h /usr/include/stdio.h \
- /usr/include/features.h /usr/include/arm-linux-gnueabihf/bits/predefs.h \
+setNew.o: setNew.c set.h /usr/include/stdio.h /usr/include/features.h \
+ /usr/include/arm-linux-gnueabihf/bits/predefs.h \
  /usr/include/arm-linux-gnueabihf/sys/cdefs.h \
  /usr/include/arm-linux-gnueabihf/bits/wordsize.h \
  /usr/include/arm-linux-gnueabihf/gnu/stubs.h \
@@ -21,5 +21,5 @@ datastructures.o: datastructures.c dataStructures.h /usr/include/stdio.h \
  /usr/include/arm-linux-gnueabihf/bits/time.h \
  /usr/include/arm-linux-gnueabihf/sys/sysmacros.h \
  /usr/include/arm-linux-gnueabihf/bits/pthreadtypes.h \
- /usr/include/alloca.h \
+ /usr/include/alloca.h /usr/include/string.h \
  /usr/lib/gcc/arm-linux-gnueabihf/4.6/include/stdbool.h

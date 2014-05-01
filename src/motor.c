@@ -147,7 +147,7 @@ void rotate360(){
   pthread_create(&rth,NULL,drivemotors,(void*)&motorright);
   pthread_create(&lth,NULL,drivemotors,(void*)&motorleft);
   
-  usleep(1350000*4);
+  usleep(1330000*4);
   
   pthread_cancel(rth);
   pthread_cancel(lth);

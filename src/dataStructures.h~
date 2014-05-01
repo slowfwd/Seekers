@@ -124,10 +124,10 @@ void print();
 */
 void edgeInit(vertexNode *, edgeNode *);
 
-/*
+
 vertexNode *head;  // head of the vertexNode List
 vertexNode *tail;  // tail of the vertexNode List
 vertexNode *foundNode;
 edgeNode *foundEdge; //found edgeNode
-*/
+
 
