@@ -3,27 +3,37 @@
 #include "dfs.h"
 #include "init.h"
 
-int currentDistanceTravelled;
-
-orientation currentOrientation;
 
 extern bool objectFound;               //From opencv
-orientation lastTurn;                                        // Change
-orientation lastPostionSeen = Straight;
 
-int currentNodeID = 0;   
-int distanceToNextNode;
+orientation lastTurn;                          
+orientation lastPostionSeen = Straight;     
 
-set* markedNodes;
-set* frontierNodes;
-stack spine;
+
+int distanceToNextNode; //Distance to be travelled to the next node
+
+static set* markedNodes;   // Set for storing nodes visited
+static set* frontierNodes; // Set for storing frontier nodes to be explored
+static stack spine;        // Spine for storing node IDs
+
+
+/**
+@description:
+    initializes spine
+
+*/
 
 void init_Dfs()
 {
-  initStack(&spine);
-  init();
-  int nextNodeID = -1;
+  initStack(&spine);    //Initializes the stack     
 }
+
+
+/**
+@description:
+    Given a node id with reference to the graph,
+    the neighbouring nodes are added to the frontier set
+*/
 
 void addNeigbourNodesToFrontier(int id){
     vertexNode* v = searchNode(id);
@@ -45,6 +55,15 @@ void addNeigbourNodesToFrontier(int id){
     }
 
 }
+
+/**
+@description:
+    The next node to be traversed is decided
+    Incorporates the last position seen by the bot
+
+@return : Returns the ID of the next node to be traversed
+
+*/
 
 int DecideNextNode(int currentNodeID){
 
@@ -106,7 +125,12 @@ int DecideNextNode(int currentNodeID){
 }
     
 
+/**
+@description: Given the current node and next node
+              to be traversed, the function returns only after 
+              the bot has traversed to the next node
 
+*/              
 
 void moveToNextNode(int currentNodeID ,int nextNodeID)    //Decides on which  node to move to
 {
@@ -140,7 +164,12 @@ void moveToNextNode(int currentNodeID ,int nextNodeID)    //Decides on which  no
 
 }
 
-int checkIfNeighborExistsInFrontier(int nodeID) //Checks if neighbor node exists in the frontier
+/**
+@description: 
+    Checks if neighbor node exists in the frontier
+    Returns bool
+*/
+int checkIfNeighborExistsInFrontier(int nodeID) 
 {
     vertexNode* v = searchNode(nodeID);
     //Found the vertex node
@@ -164,19 +193,15 @@ int checkIfNeighborExistsInFrontier(int nodeID) //Checks if neighbor node exists
 
 }
 
-
-
-void scanAndSearch(void)
-{
-
-
-}
-
 void startSearch()
 {
-    init_Dfs();
-    init_motors();
+    int currentNodeID = 0;  //Current node while starting is 0
+
+
+    init_Dfs();         //Initialize the stack spine
+    init_motors();      
     run();
+
     int nextNodeID;
     addNeigbourNodesToFrontier(currentNodeID);
     addToSet(&markedNodes,currentNodeID);  
@@ -189,10 +214,12 @@ while(1)
     
     if(objectFound == true)
     {
-	printf("Obj found: %d",cnt);
-	cnt ++;
-	rotate360();
-	objectFound = false;	
+        // Functionality here TBD 
+
+    	printf("Obj found: %d",cnt);
+	    cnt ++;
+	    rotate360();
+    	objectFound = false;	
 
        /* while(isObjectClose() == 0)
            moveForward(); // Provided by the motor library
@@ -209,19 +236,19 @@ while(1)
     {
         
   
-        //lastPostionSeen = Straight;
-        //nextNodeID = DecideNextNode(currentNodeID);
         printf("Spine. \n");
         printStack(&spine);
         printf("\n\n");
 
         printf("Next node to be traversed: %d\n", nextNodeID);
-        moveToNextNode(currentNodeID,nextNodeID); //Add invariant
-        currentNodeID = nextNodeID;
+     
+        moveToNextNode(currentNodeID,nextNodeID); //Move to the next node
+        currentNodeID = nextNodeID;             
         
-        addToSet(&markedNodes,currentNodeID);   //Change
-        addNeigbourNodesToFrontier(currentNodeID);
-        removeNodeFromSet(&frontierNodes,currentNodeID); //Change
+        addToSet(&markedNodes,currentNodeID);   //Current Node has been traversed. Add to the set
+        addNeigbourNodesToFrontier(currentNodeID);  //Adding frontier nodes from the new current node
+        removeNodeFromSet(&frontierNodes,currentNodeID); //Removing the current node from frontier
+     
         printf("Done nodes : \n");
         listSet(markedNodes);
         printf("Frontier Nodes : \n");
@@ -229,8 +256,8 @@ while(1)
 
 
 
-        if (checkIfNeighborExistsInFrontier(currentNodeID)) //curr ID
-        {
+        if (checkIfNeighborExistsInFrontier(currentNodeID)) //Check if neighbor exists in frontier
+        {                                                   // If so visit there
          
             push(&spine, currentNodeID);  //Change
             nextNodeID = DecideNextNode(currentNodeID);
@@ -241,7 +268,6 @@ while(1)
             return ; // Done traversing. Stop
         else
             {
-                // nextNodeID = spine.top();
                 nextNodeID = pop(&spine);                
             }
         }
