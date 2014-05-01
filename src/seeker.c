@@ -16,7 +16,7 @@ void *objectDetect(void *arg)
 
 void *objectSearch(void *arg)
 {
-    startSearch();
+    	startSearch();
 	//return ;
 }
 
@@ -37,6 +37,7 @@ int main()
 	errorDisp(retVal[0]);
 	retVal[1] = pthread_create(&threads[1], NULL, objectSearch, NULL);
 	errorDisp(retVal[1]);
+	
 	pthread_exit(NULL);
 	return 0;
 }

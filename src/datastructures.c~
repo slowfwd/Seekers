@@ -4,6 +4,10 @@ int xx;
 
 #define ASSIGN_ID() ((xx) = (xx) + 1)
 
+vertexNode * head, * tail, * foundNode;
+edgeNode * foundEdge;
+
+
 edgeNode *n;
 
 void init()
@@ -140,7 +144,7 @@ void deleteVertexNode ( vertexNode* nodeA)
 void searchEdge(vertexNode* vnode, int id){
 	 foundEdge = vnode->head;
 	 //printf("%p\n",foundEdge);
-	 printf("%d\n%d",foundEdge->id, id);
+	 //printf("%d\t%d",foundEdge->id, id);
 	while(foundEdge){
 		if(foundEdge->id == id)
 			return ;

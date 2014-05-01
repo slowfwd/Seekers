@@ -1,4 +1,4 @@
-list.o: list.c interface.h dataStructures.h /usr/include/stdio.h \
+dfs.o: dfs.c motor.h dataStructures.h /usr/include/stdio.h \
  /usr/include/features.h /usr/include/arm-linux-gnueabihf/bits/predefs.h \
  /usr/include/arm-linux-gnueabihf/sys/cdefs.h \
  /usr/include/arm-linux-gnueabihf/bits/wordsize.h \
@@ -10,13 +10,10 @@ list.o: list.c interface.h dataStructures.h /usr/include/stdio.h \
  /usr/lib/gcc/arm-linux-gnueabihf/4.6/include/stdarg.h \
  /usr/include/arm-linux-gnueabihf/bits/stdio_lim.h \
  /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h \
- /usr/include/string.h /usr/include/xlocale.h /usr/include/inttypes.h \
- /usr/lib/gcc/arm-linux-gnueabihf/4.6/include/stdint.h \
- /usr/include/stdint.h /usr/include/arm-linux-gnueabihf/bits/wchar.h \
  /usr/include/stdlib.h /usr/include/arm-linux-gnueabihf/bits/waitflags.h \
  /usr/include/arm-linux-gnueabihf/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/arm-linux-gnueabihf/bits/endian.h \
- /usr/include/arm-linux-gnueabihf/bits/byteswap.h \
+ /usr/include/arm-linux-gnueabihf/bits/byteswap.h /usr/include/xlocale.h \
  /usr/include/arm-linux-gnueabihf/sys/types.h /usr/include/time.h \
  /usr/include/arm-linux-gnueabihf/sys/select.h \
  /usr/include/arm-linux-gnueabihf/bits/select.h \
@@ -24,4 +21,6 @@ list.o: list.c interface.h dataStructures.h /usr/include/stdio.h \
  /usr/include/arm-linux-gnueabihf/bits/time.h \
  /usr/include/arm-linux-gnueabihf/sys/sysmacros.h \
  /usr/include/arm-linux-gnueabihf/bits/pthreadtypes.h \
- /usr/include/alloca.h list.h
+ /usr/include/alloca.h \
+ /usr/lib/gcc/arm-linux-gnueabihf/4.6/include/stdbool.h dfs.h set.h \
+ /usr/include/string.h stack.h init.h

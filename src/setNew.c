@@ -4,7 +4,7 @@ void addToSet(set ** head, int ID){
 
 	//check if the node exists, don't add
 	if(*head == NULL){//first element of the set
-		*head = malloc(sizeof(set));
+		*head = (set*)malloc(sizeof(set));
 		(*head)->listHead = NULL;
 	}
 	if(!setContains(*head, ID)){// if the set doesn't contain the given ID
@@ -20,7 +20,7 @@ void addToSet(set ** head, int ID){
 void addToLinkedList(set ** setHead, graph_node * head, int ID){
 
 	if(head == NULL){//first node of the list
-		head = malloc(sizeof(graph_node));
+		head = (graph_node*)malloc(sizeof(graph_node));
 		head->ID = ID;
 		head->next = NULL;
 		(*setHead)->listHead = head;
@@ -30,7 +30,7 @@ void addToLinkedList(set ** setHead, graph_node * head, int ID){
 	while(current->next != NULL){//traverse till the end of the list
 		current = current->next;
 	}
-	current->next = malloc(sizeof(graph_node));
+	current->next = (node*)malloc(sizeof(graph_node));
 	current->next->ID = ID;
 	current->next->next = NULL;
 	(*setHead)->listHead = head;

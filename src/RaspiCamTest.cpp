@@ -16,11 +16,11 @@ using namespace cv;
 #define LEFT_THRESHOLD	(100)	// Horizontal axis threshold for detecting object last went left
 
 int H_MIN = 0;
-int H_MAX = 256;
-int S_MIN = 0;
+int H_MAX = 38;
+int S_MIN = 159;
 int S_MAX = 256;
-int V_MIN = 0;
-int V_MAX = 256;
+int V_MIN = 93;
+int V_MAX = 133;
 
 //default capture width and height
 const int FRAME_WIDTH = 640;
@@ -32,6 +32,8 @@ const int MAX_NUM_OBJECTS=2;
 //minimum and maximum object area
 const int MIN_OBJECT_AREA = 20*20;
 const int MAX_OBJECT_AREA = FRAME_HEIGHT*FRAME_WIDTH/1.5;
+
+bool objectFound;
 
 const string windowName = "Original Image";
 const string windowName1 = "HSV Image";
@@ -124,7 +126,7 @@ void morphOps(Mat &thresh){
 // Updates global area and flag object found
 
 void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed){
-
+	static int cnt = 0;
 	Mat temp;
 	threshold.copyTo(temp);
 	//these two vectors needed for output of findContours
@@ -134,7 +136,7 @@ void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed){
 	findContours(temp,contours,hierarchy,CV_RETR_CCOMP,CV_CHAIN_APPROX_SIMPLE );
 	//use moments method to find our filtered object
 	double refArea = 0;
-	bool objectFound = false;
+	
 	if (hierarchy.size() > 0) {
 		int numObjects = hierarchy.size();
         //if number of objects greater than MAX_NUM_OBJECTS we have a noisy filter
@@ -156,7 +158,11 @@ void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed){
 			//let user know you found an object
 			if(objectFound ==true){
 				putText(cameraFeed,"Tracking Object",Point(0,50),2,1,Scalar(0,255,0),2);
-
+				//if(cnt >=1000){
+					printf("obj found: %d\n",cnt);
+					fflush(stdout);
+					cnt ++;
+				//}
 				putText(cameraFeed,intToString((int)refArea),Point(0,200),2,1,Scalar(0,0,200),2);
 				if(x>RIGHT_THRESHOLD)
 					putText(cameraFeed,"Obj at right edge", Point(0,300),2,1,Scalar(0,0,200),2);
@@ -165,7 +171,7 @@ void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed){
 				//draw object location on screen
 				drawObject(x,y,cameraFeed);}
 
-		}else putText(cameraFeed,"TOO MUCH NOISE! ADJUST FILTER",Point(0,50),1,2,Scalar(0,0,255),2);
+		}else {putText(cameraFeed,"TOO MUCH NOISE! ADJUST FILTER",Point(0,50),1,2,Scalar(0,0,255),2);}
 	}
 }
 
@@ -189,7 +195,7 @@ void startDetect()
 	//x and y values for the location of the object
 	int x=0, y=0;
 	//create slider bars for HSV filtering
-	createTrackbars();
+	//createTrackbars();
 
 	while(1){
 	
@@ -215,9 +221,13 @@ void startDetect()
 		if(trackObjects)
 			trackFilteredObject(x,y,threshold,cameraFeed);
 
+		if(objectFound == true)
+			sleep(5);	
+
+		//printf("here\n");
 		//show frames 
-		imshow(windowName2,threshold);
-		imshow(windowName,cameraFeed);
+		//imshow(windowName2,threshold);
+		//imshow(windowName,cameraFeed);
 		//imshow(windowName1,HSV);
 		
 		waitKey(30);

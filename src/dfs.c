@@ -1,13 +1,14 @@
 //#include "dataStructures.h"
 #include "motor.h"
 #include "dfs.h"
+#include "init.h"
 
 int currentDistanceTravelled;
 
 orientation currentOrientation;
 
-int objectFound = false;               //From opencv
-                                        // Change
+extern bool objectFound;               //From opencv
+orientation lastTurn;                                        // Change
 orientation lastPostionSeen = Straight;
 
 int currentNodeID = 0;   
@@ -171,7 +172,7 @@ void scanAndSearch(void)
 
 }
 
-int main()
+void startSearch()
 {
     init_Dfs();
     init_motors();
@@ -181,19 +182,25 @@ int main()
     addToSet(&markedNodes,currentNodeID);  
     push(&spine, currentNodeID);
     nextNodeID = DecideNextNode(currentNodeID);
+    int cnt = 0;
 while(1)
 {
     //scanAndSearch();    //openCV code 
     
-/*    if(objectFound == true)
+    if(objectFound == true)
     {
-        while(isObjectClose() == 0)
+	printf("Obj found: %d",cnt);
+	cnt ++;
+	rotate360();
+	objectFound = false;	
+
+       /* while(isObjectClose() == 0)
            moveForward(); // Provided by the motor library
     
             if(distanceTravelledFromPrevNode == distanceToNextNode)
                 addToSet(&markedNodes,currentNodeID);
            //?? Who updates the current position of the object
-
+	*/
         //Keep track of the distance so that obj position is known
         //Keep track of where we are in the graph
 
@@ -201,7 +208,7 @@ while(1)
     else
     {
         
-  */
+  
         //lastPostionSeen = Straight;
         //nextNodeID = DecideNextNode(currentNodeID);
         printf("Spine. \n");
@@ -231,7 +238,7 @@ while(1)
         else
         { 
         if(isStackEmpty(&spine))
-            return 0; // Done traversing. Stop
+            return ; // Done traversing. Stop
         else
             {
                 // nextNodeID = spine.top();
@@ -240,7 +247,8 @@ while(1)
         }
             
        }
-        return 0;
+        
+}
 }
 
 
