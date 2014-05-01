@@ -1,3 +1,18 @@
+/**
+@author : Vaibhav N Bhat
+@description : 
+	
+	Contains openCV related functionality
+	Uses wrapper to read frames from the camera \
+	perform object (color based) detection and 
+		1. Display images on the monitor for calibrating.
+			or
+		2. Updates a global which indicates the presence of the object 
+
+	Contains one thread function for object detection
+	Reference : Kyle Hunslow Blog
+*/
+
 #include <cv.h>
 #include <highgui.h>
 
@@ -7,15 +22,17 @@
 #include <iostream>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/opencv.hpp>
-#include <stdio.h>
+
 #include "init.h"
 
-using namespace cv;
+using namespace cv;				//OpenCV namespace
 
 #define RIGHT_THRESHOLD (500)	// Horizontal axis threshold for detecting object last went right
 #define LEFT_THRESHOLD	(100)	// Horizontal axis threshold for detecting object last went left
 
-int H_MIN = 0;
+/*** Static parameters used in this file ***/
+
+int H_MIN = 0;					// HSV Params for detecting blue object
 int H_MAX = 38;
 int S_MIN = 159;
 int S_MAX = 256;
@@ -27,23 +44,31 @@ const int FRAME_WIDTH = 640;
 const int FRAME_HEIGHT = 480;
 
 //max number of objects to be detected in frame
-const int MAX_NUM_OBJECTS=2;
+const int MAX_NUM_OBJECTS=1;
 
 //minimum and maximum object area
 const int MIN_OBJECT_AREA = 20*20;
 const int MAX_OBJECT_AREA = FRAME_HEIGHT*FRAME_WIDTH/1.5;
 
-bool objectFound;
 
 const string windowName = "Original Image";
 const string windowName1 = "HSV Image";
 const string windowName2 = "Thresholded Image";
 const string windowName3 = "After Morphological Operations";
 const string trackbarWindowName = "Trackbars";
+
+/*** File specific static params ends here ***/
+
+
+bool objectFound;		//Global variable indicating presence of the object
+
+
 void on_trackbar( int, void* )
 {
 	
 }
+
+/** Helper function converts int to string **/
 
 string intToString(int number){
 
@@ -52,6 +77,16 @@ string intToString(int number){
 	ss << number;
 	return ss.str();
 }
+
+
+/** 
+	
+	Creates Trackbars on the monitor
+	Used for calibrating the camera offline
+	The color of the object to be detected can be set	
+	Unused in the compilation for moving robot
+
+*/
 void createTrackbars(){
 	//create window for trackbars
 
@@ -75,6 +110,14 @@ void createTrackbars(){
 
 
 }
+
+
+/**
+@description: 
+	Draws a target on the monitor to display the object on the monitor
+
+*/
+
 void drawObject(int x, int y,Mat &frame){
 	// Indicates 
 	//1. The position of the object on the frame
@@ -120,8 +163,12 @@ void morphOps(Mat &thresh){
 
 }
 
-// 1.Finds the contours of the object.
-// 2. Finds contour area 
+/**
+@description
+	 1.Finds the contours of the object.
+ 	 2. Finds contour area 
+
+*/
 
 // Updates global area and flag object found
 
@@ -176,11 +223,20 @@ void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed){
 }
 
 
-//int main(int argc, char* argv[])
+/**
+@description : 
+	Called from thread function
+	Detects the color specified in the frame
+	Globals:
+		objectFound is updated
+*/		
+
+
 void startDetect()
 {
 	bool trackObjects = true;
-    	bool useMorphOps = true;
+	bool useMorphOps = true;
+
    	RaspiCamCvCapture * capture = raspiCamCvCreateCameraCapture(0); // Index doesn't really matter
 
 	IplImage* image;
@@ -214,17 +270,16 @@ void startDetect()
 		if(useMorphOps)
 		morphOps(threshold);
 
-		//pass in thresholded frame to our object tracking function
-		//this function will return the x and y coordinates of the
-		//filtered object
+		// Thresholded frame is input object tracking function
+		// x,y coordinate for the center of the object is obtained 
+		// by side effect
 
 		if(trackObjects)
 			trackFilteredObject(x,y,threshold,cameraFeed);
 
 		if(objectFound == true)
-			sleep(5);	
+			sleep(5);	// Thread sleep - To be developed
 
-		//printf("here\n");
 		//show frames 
 		//imshow(windowName2,threshold);
 		//imshow(windowName,cameraFeed);
@@ -238,3 +293,13 @@ void startDetect()
 	//return 0;
 }
 
+/**
+@description:
+	Returns true if the object is too close
+	Compares the area of the detected object with a ref area
+*/	
+
+bool isObjectClose()
+{
+
+}
